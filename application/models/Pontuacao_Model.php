@@ -1,25 +1,29 @@
 <?php
 
 class Pontuacao_Model extends CI_Model {
+
     const table = 'pontuacao';
-    
+
     public function get() {
-        $query = $this->db->get(self::table);
-        // return $query->result();
-        /*$this->db->select('pontuacao.*, equipe.nome as nome_equipe');
-        $this->db->select('pontuacao.*, prova.nome as nome_prova');
-        $this->db->select('pontuacao.*, usuario.nome as nome_usuario');
-        $this->db->from('pontuacao');
+        
+        $query = $this->db->get(self::table); 
+      /*$this->db->select("pontuacao.*");
+        $this->db->select(",(equipe.nome) AS nome_equipe");
+        $this->db->select(",(prova.nome) AS nome_prova");
+        $this->db->select(",(usuario.nome) AS nome_usuario");
+        $this->db->from(self::table);
         $this->db->join('equipe', 'equipe.id=pontuacao.id_equipe', 'inner');
         $this->db->join('prova', 'prova.id=pontuacao.id_prova', 'inner');
         $this->db->join('usuario', 'usuario.id=pontuacao.id_usuario', 'inner');
         $query = $this->db->get();*/
-        return $query->result();  
+        return $query->result();
     }
+
     public function insert($data = array()) {
         $this->db->insert(self::table, $data);
         return $this->db->affected_rows();
     }
+
     public function delete($id) {
         if ($id > 0) {
             $this->db->where('id', $id);
@@ -39,5 +43,7 @@ class Pontuacao_Model extends CI_Model {
             return false;
         }
     }
+
 }
+
 ?>

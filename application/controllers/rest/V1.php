@@ -82,7 +82,6 @@ class V1 extends REST_Controller {
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
-
     //deletar
     public function usuario_delete($id) {
         $this->load->model('Usuario_Model', 'us');
@@ -98,7 +97,6 @@ class V1 extends REST_Controller {
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
-
     //alterar
     public function usuario_put($id) {
         if ((!$this->put('nome')) || (!$this->put('senha'))) {
@@ -174,7 +172,7 @@ class V1 extends REST_Controller {
             return;
         }
         $data = array(
-            'nome' => $this->put('nome'),
+            'nome' => $this->put('nome')
         );
         $this->load->model('Equipe_Model', 'eq');
         if ($this->eq->update($id, $data)) {
@@ -247,9 +245,8 @@ class V1 extends REST_Controller {
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
-
-     public function integrante_put($id) {
-        if ((!$this->post('id_equipe')) || (!$this->post('nome')) || (!$this->post('data_nasc')) || (!$this->post('rg')) || (!$this->post('cpf'))) {
+    public function integrante_put($id) {
+        if ((!$this->put('id_equipe')) || (!$this->put('nome')) || (!$this->put('data_nasc')) || (!$this->put('rg')) || (!$this->put('cpf'))) {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo não preenchidos'
@@ -268,13 +265,13 @@ class V1 extends REST_Controller {
             //deu certo 
             $this->set_response([
                 'status' => true,
-                'message' => 'Equipe alterada com successo !'
+                'message' => 'Integrante alterado com successo !'
                     ], REST_Controller_Definitions::HTTP_OK);
         } else {
             //deu errado
             $this->set_response([
                 'status' => false,
-                'error' => 'Falha ao alterar Equipe'
+                'error' => 'Falha ao alterar Integrante'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
@@ -295,15 +292,175 @@ class V1 extends REST_Controller {
     }
 
     public function pontuacao_get() {
-        $this->load->model('Pontuacao_Model', 'pn');
-        $data = $this->pn->get();
+        $this->load->model('Pontuacao_Model', 'po');
+        $data = $this->po->get();
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
-
+    
+    public function pontuacao_post() {
+        //Primeiro fazemos a validação, para verificar o preenchimento dos campos
+        if ((!$this->post('id_equipe')) || (!$this->post('id_prova')) || (!$this->post('id_usuario')) || (!$this->post('pontos')) || (!$this->post('data_hora'))) {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Campo não preenchidos'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            return;
+        }
+        $data = array(
+            'id' => $this->post('id'),
+            'id_equipe' => $this->post('id_equipe'),
+            'id_prova' => $this->post('id_prova'),
+            'id_usuario' => $this->post('id_usuario'),
+            'pontos' => $this->post('pontos'),
+            'data_hora' => $this->post('data_hora'),
+        );
+        //carregamos o model, e mandamos inserir no DB 
+        //os dados recebidos via POST
+        $this->load->model('Pontuacao_Model', 'po');
+        if ($this->po->insert($data)) {
+            //deu certo 
+            $this->set_response([
+                'status' => true,
+                'message' => 'Pontuação inserida com successo !'
+                    ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            //deu errado
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao inserir Pontuação'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }  
+    
+    public function pontuacao_put($id) {
+        if ((!$this->put('id_equipe')) || (!$this->put('id_prova')) || (!$this->put('id_usuario')) || (!$this->put('pontos')) || (!$this->put('data_hora'))) {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Campo não preenchidos'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            return;
+        }
+        $data = array(
+            'id' => $this->put('id'),
+            'id_equipe' => $this->put('id_equipe'),
+            'id_prova' => $this->put('id_prova'),
+            'id_usuario' => $this->put('id_usuario'),
+            'pontos' => $this->put('pontos'),
+            'data_hora' => $this->put('data_hora')
+        );
+        $this->load->model('Pontuacao_Model', 'po');
+        if ($this->po->update($id, $data)) {
+            //deu certo 
+            $this->set_response([
+                'status' => true,
+                'message' => 'Pontuação alterada com successo !'
+                    ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            //deu errado
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao alterar Pontuação'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
+    
+    public function pontuacao_delete($id) {
+        $this->load->model('Pontuacao_Model', 'po');
+               if ($this->po->delete($id)) {
+            $this->set_response([
+                'status' => true,
+                'message' => 'Integrante deletado com successo !'
+                    ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao deletar Integrante'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
+    
     public function prova_get() {
         $this->load->model('Prova_Model', 'pr');
         $data = $this->pr->get();
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
+    
+    public function prova_post() {
+        //Primeiro fazemos a validação, para verificar o preenchimento dos campos
+        if ((!$this->post('nome')) || (!$this->post('descricao')) || (!$this->post('num_int'))) {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Campo não preenchidos'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            return;
+        }
+        $data = array(
+            //'id' => $this->post('id'),
+            'nome' => $this->post('nome'),
+            'descricao' => $this->post('descricao'),
+            'num_int' => $this->post('num_int')
+        );
+        //carregamos o model, e mandamos inserir no DB 
+        //os dados recebidos via POST
+        $this->load->model('Prova_Model', 'pr');
+        if ($this->pr->insert($data)) {
+            //deu certo 
+            $this->set_response([
+                'status' => true,
+                'message' => 'Equipe inserida com successo !'
+                    ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            //deu errado
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao inserir equipe'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function prova_put($id) {
+        if ((!$this->put('nome')) || (!$this->put('descricao')) || (!$this->put('num_int'))) {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Campo não preenchidos'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            return;
+        }
+        $data = array(
+            'nome' => $this->put('nome'),
+            'descricao' => $this->put('descricao'),
+            'num_int' => $this->put('num_int')
+        );
+        $this->load->model('Prova_Model', 'pr');
+        if ($this->pr->update($id, $data)) {
+            //deu certo 
+            $this->set_response([
+                'status' => true,
+                'message' => 'Prova alterada com successo !'
+                    ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            //deu errado
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao alterar Prova'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function prova_delete($id) {
+        $this->load->model('Prova_Model', 'pr');
+        if ($this->pr->delete($id)) {
+            $this->set_response([
+                'status' => true,
+                'message' => 'Prova deletada com successo !'
+                    ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao deletar Prova'
+                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
+
 
 }
