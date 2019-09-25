@@ -34,8 +34,8 @@ class V1 extends REST_Controller {
     public function contato_get() {
         $retorno = [
             'status' => true,
-            'nome' => 'ryan',
-            'telefone' => '01010101',
+            'nome' => 'Paulodir',
+            'telefone' => '1111111',
             'error' => ''
         ];
         $this->set_response($retorno, REST_Controller_Definitions::HTTP_OK);
@@ -60,7 +60,6 @@ class V1 extends REST_Controller {
             return;
         }
         $data = array(
-            'id' => $this->post('id'),
             'nome' => $this->post('nome'),
             'senha' => $this->post('senha'),
             'nivel' => $this->post('nivel'),
@@ -142,7 +141,6 @@ class V1 extends REST_Controller {
             return;
         }
         $data = array(
-            'id' => $this->post('id'),
             'nome' => $this->post('nome'),
         );
         //carregamos o model, e mandamos inserir no DB 
@@ -245,6 +243,7 @@ class V1 extends REST_Controller {
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
+    
     public function integrante_put($id) {
         if ((!$this->put('id_equipe')) || (!$this->put('nome')) || (!$this->put('data_nasc')) || (!$this->put('rg')) || (!$this->put('cpf'))) {
             $this->set_response([

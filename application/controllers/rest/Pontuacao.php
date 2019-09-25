@@ -9,7 +9,7 @@ require APPPATH . '/libraries/Format.php';
 class Pontuacao extends REST_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model('Pontuacao_model','pt');
+        $this->load->model('Pontuacao_Model','pt');
         date_default_timezone_set('America/Sao_Paulo');
     }
     public function pontuacao_get() {
